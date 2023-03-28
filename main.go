@@ -2,11 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
-	"os/signal"
 	"sync"
-	"syscall"
 
+	"github.com/getlantern/systray"
 	"github.com/spf13/viper"
 )
 
@@ -20,8 +18,22 @@ type Config struct {
 	MailList []mailConfig `mapstructure:"mailList"`
 }
 
+var stopCh = make(chan struct{}, 1)
+var wg sync.WaitGroup
+
 func main() {
-	// 读取配置文件
+	systray.Run(onReady, onExit)
+}
+
+func onReady() {
+	systray.SetTitle("未读邮件")
+	systray.SetTooltip("未读邮件数量")
+	mQuit := systray.AddMenuItem("退出", "退出程序")
+	go func() {
+		<-mQuit.ClickedCh
+		systray.Quit()
+	}()
+
 	viper.SetConfigFile("config.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err)
@@ -32,10 +44,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	stopCh := make(chan struct{}, 1)
-
-	// 使用WaitGroup等待所有goroutine结束
-	var wg sync.WaitGroup
 	for _, mailConf := range conf.MailList {
 		wg.Add(1)
 		go func(mc mailConfig) {
@@ -47,18 +55,10 @@ func main() {
 
 		}(mailConf)
 	}
+}
 
-	// 捕捉 Ctrl+C 信号
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-
-	// 等待信号
-	<-sigCh
-	log.Println("Received signal to stop")
+func onExit() {
+	log.Println("quit called")
 	close(stopCh)
-
-	// 停止所有goroutine并等待它们退出
-	log.Println("Stopping all goroutines")
 	wg.Wait()
-	log.Println("All goroutines stopped")
 }
