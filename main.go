@@ -2,31 +2,25 @@ package main
 
 import (
 	"log"
-	"sync"
+	"strconv"
+
+	_ "embed"
 
 	"github.com/getlantern/systray"
 	"github.com/spf13/viper"
 )
 
-type mailConfig struct {
-	Username string `mapstructure:"username"`
-	Password string `mapstructure:"password"`
-	Remote   string `mapstructure:"remote"`
-}
+//go:embed mail.ico
+var mailIcon []byte
 
-type Config struct {
-	MailList []mailConfig `mapstructure:"mailList"`
-}
-
-var stopCh = make(chan struct{}, 1)
-var wg sync.WaitGroup
+var menuMap = map[string]*menuItem{}
 
 func main() {
 	systray.Run(onReady, onExit)
 }
 
 func onReady() {
-	systray.SetTitle("未读邮件")
+	systray.SetIcon(mailIcon)
 	systray.SetTooltip("未读邮件数量")
 	mQuit := systray.AddMenuItem("退出", "退出程序")
 	go func() {
@@ -44,21 +38,33 @@ func onReady() {
 		log.Fatal(err)
 	}
 
-	for _, mailConf := range conf.MailList {
-		wg.Add(1)
-		go func(mc mailConfig) {
-			client := newMailClient(mc)
-			client.subscribe(stopCh)
+	collectCh := make(chan struct{}, len(conf.MailConfList))
 
-			defer client.unSubscribe()
-			defer wg.Done()
+	go func() {
+		for {
+			<-collectCh
+			count := 0
+			for _, mi := range menuMap {
+				count += mi.unreadCount
+			}
+			systray.SetTitle(strconv.Itoa(count))
+		}
 
-		}(mailConf)
+	}()
+
+	for _, mc := range conf.MailConfList {
+		menuMap[mc.Title] = newMenuItem(mc, collectCh)
+	}
+
+	for _, mi := range menuMap {
+		go func(mi *menuItem) {
+			mi.loop()
+		}(mi)
 	}
 }
 
 func onExit() {
-	log.Println("quit called")
-	close(stopCh)
-	wg.Wait()
+	for _, mi := range menuMap {
+		mi.unSubscribe()
+	}
 }

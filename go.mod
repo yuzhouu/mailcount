@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/emersion/go-imap v1.2.1
 	github.com/getlantern/systray v1.2.1
+	github.com/sanity-io/litter v1.5.5
 	github.com/spf13/viper v1.15.0
 )
 
