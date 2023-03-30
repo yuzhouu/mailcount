@@ -16,3 +16,5 @@
 
 config.yaml
 dist/
+installer/icons
+.DS_store
