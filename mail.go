@@ -20,16 +20,23 @@ type menuItem struct {
 }
 
 func newMenuItem(conf mailConfig, collectCh chan struct{}) *menuItem {
+	menu := systray.AddMenuItem(conf.Title, "")
 	c, err := client.DialTLS(conf.Remote, nil)
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := c.Login(conf.Username, conf.Password); err != nil {
+		menu.SetTemplateIcon(warnIcon, warnIcon)
 		log.Println(err)
 	}
 
-	menu := systray.AddMenuItem(conf.Title, "")
+	if err := c.Login(conf.Username, conf.Password); err != nil {
+		menu.SetTemplateIcon(warnIcon, warnIcon)
+		log.Println(err)
+	}
+
+	if _, err := c.Select("Inbox", false); err != nil {
+		menu.SetTemplateIcon(warnIcon, warnIcon)
+		log.Panicln(err)
+	}
+
 	refreshMenu := menu.AddSubMenuItem("刷新", "立即刷新未读邮件数量")
 	openMenu := menu.AddSubMenuItem("打开邮箱", "在浏览器中打开邮箱")
 	go func() {
@@ -55,6 +62,7 @@ func (m *menuItem) loop() {
 	criteria.WithoutFlags = []string{imap.SeenFlag}
 	ids, err := m.mailClient.Search(criteria)
 	if err != nil {
+		m.menu.SetTemplateIcon(warnIcon, warnIcon)
 		log.Println(err)
 	}
 
@@ -94,7 +102,8 @@ func (m *menuItem) subscribe() {
 			}
 		case err := <-done:
 			if err != nil {
-				log.Fatal(err)
+				m.menu.SetTemplateIcon(warnIcon, warnIcon)
+				log.Println(err)
 			}
 			m.loop()
 			return
