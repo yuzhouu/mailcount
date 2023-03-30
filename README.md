@@ -8,6 +8,10 @@ Mailcount is a lightweight application that displays the number of unread emails
 - Simple: The app has no GUI, uses very little CPU, and requires minimal memory usage.
 - Secure: Mailcount is open source on GitHub, so you can review the code for added security and transparency.
 
+## Download
+
+https://github.com/yuzhouu/mailcount/releases
+
 ## How to Use
 
 To use Mailcount, you need to create a configuration file. For example, you can create a file at `$HOME/.mailcount/config.yaml` and input the following content:
