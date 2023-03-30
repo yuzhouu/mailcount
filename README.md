@@ -27,7 +27,9 @@ mailList:
 
 - Err02: If the application shows Err01 beside the mailbox icon, it means the config file is malformed.
 
-## support
+## Tested Mail Providers:
 
 - [x] outlook
 - [ ] 163
+
+**If your mail provider supports IMAP, this application should work well with it regardless of whether it is listed or not.**
