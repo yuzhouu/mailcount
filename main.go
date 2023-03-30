@@ -24,7 +24,7 @@ func main() {
 
 func onReady() {
 	systray.SetTemplateIcon(mailBoxIcon, mailBoxIcon)
-	systray.SetTooltip("未读邮件数量")
+	systray.SetTooltip("快速查看未读邮件数量")
 	mQuit := systray.AddMenuItem("退出", "退出程序")
 	mHelp := systray.AddMenuItem("使用说明", "查看使用说明")
 	go func() {
@@ -64,7 +64,11 @@ func onReady() {
 			for _, mi := range menuMap {
 				count += mi.unreadCount
 			}
-			systray.SetTitle(strconv.Itoa(count))
+			if count != 0 {
+				systray.SetTitle(strconv.Itoa(count))
+			} else {
+				systray.SetTitle("")
+			}
 		}
 
 	}()
