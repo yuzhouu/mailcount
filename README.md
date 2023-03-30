@@ -1,15 +1,16 @@
-# mailcount
+# Mailcount
 
-show unread mail count in system tray
+Mailcount is a lightweight application that displays the number of unread emails in your mailbox on the system tray. This can be useful if you want to stay updated on your mailbox status without having to open your email client.
 
-## features
+## Features
 
-- simple: small application, no gui, very low cpu, very low memory need
-- security: open source on github, you can review the code
+- Small: The app only occupies 8MB of disk space, making it a low-impact addition to your system.
+- Simple: The app has no GUI, uses very little CPU, and requires minimal memory usage.
+- Secure: Mailcount is open source on GitHub, so you can review the code for added security and transparency.
 
-## instructions
+## How to Use
 
-to use the app, you need create a config file, example `$HOME/.mailcount/config.yaml`, the content like this
+To use Mailcount, you need to create a configuration file. For example, you can create a file at `$HOME/.mailcount/config.yaml` and input the following content:
 
 ```yaml
 mailList:
@@ -20,11 +21,11 @@ mailList:
     url: https://outlook.live.com/mail/0/ # optional, the application will open this url if you click on menu.
 ```
 
-### errors
+### Common Errors
 
-- Err01: if the application show `Err01` beside mailbox icon means it can't find config file, please make sure you place have config file at `$HOME/.mailcount/config.yaml`.
+- Err01: If the application shows Err01 beside the mailbox icon, it means it cannot find the config file. Make sure the config file is located at `$HOME/.mailcount/config.yaml`.
 
-- Err02: if the application show `Err01` beside mailbox icon means the config file is malformat.
+- Err02: If the application shows Err01 beside the mailbox icon, it means the config file is malformed.
 
 ## support
 
