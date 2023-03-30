@@ -1,17 +1,20 @@
 #!/bin/bash
 
+source_suffix=$1
+path_prefix=$2
+
 # Create the directory structure
-mkdir -p MailCount.app/Contents/MacOS
-mkdir -p MailCount.app/Contents/Resources
+mkdir -p $path_prefix/MailCount.app/Contents/MacOS
+mkdir -p $path_prefix/MailCount.app/Contents/Resources
 
 # Copy the command line program to the MacOS directory
-cp ../dist/mailcount_darwin_arm64/mailcount MailCount.app/Contents/MacOS/MailCount
+cp ../dist/mailcount_${source_suffix}/mailcount $path_prefix/MailCount.app/Contents/MacOS/MailCount
 
 # Copy icons to Resources dir
-cp icons/icon.icns MailCount.app/Contents/Resources/icon.icns
+cp icons/icon.icns $path_prefix/MailCount.app/Contents/Resources/icon.icns
 
 # Create the Info.plist file in the Resources directory
-cat << EOF > MailCount.app/Contents/Info.plist
+cat << EOF > $path_prefix/MailCount.app/Contents/Info.plist
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -32,4 +35,4 @@ cat << EOF > MailCount.app/Contents/Info.plist
 EOF
 
 # Set the executable bit on the MyApp file
-chmod +x MailCount.app/Contents/MacOS/MailCount
+chmod +x $path_prefix/MailCount.app/Contents/MacOS/MailCount
