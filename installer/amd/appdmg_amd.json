@@ -1,0 +1,9 @@
+{
+  "title": "Mail Count",
+  "icon": "./icons/icon.icns",
+  "background-color": "rgb(225, 225, 255)",
+  "contents": [
+    { "x": 448, "y": 200, "type": "link", "path": "/Applications" },
+    { "x": 192, "y": 200, "type": "file", "path": "MailCount.app" }
+  ]
+}

@@ -1,0 +1,1 @@
+appdmg ./appdmg.json ./MailCount.dmg
