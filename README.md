@@ -2,7 +2,7 @@
 
 Mailcount is a lightweight application that displays the number of unread emails in your mailbox on the system tray. This can be useful if you want to stay updated on your mailbox status without having to open your email client.
 
-![a screen shot for application](./assets/screen-shot.png)
+![a screen shot for application](./assets/screen-shot-1.png)
 
 ## Features
 
