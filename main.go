@@ -28,13 +28,16 @@ func onReady() {
 	mQuit := systray.AddMenuItem("退出", "退出程序")
 	mHelp := systray.AddMenuItem("使用说明", "查看使用说明")
 	go func() {
-		select {
-		case <-mQuit.ClickedCh:
-			systray.Quit()
-			return
-		case <-mHelp.ClickedCh:
-			openbrowser("https://github.com/yuzhouu/mailcount")
+		for {
+			select {
+			case <-mQuit.ClickedCh:
+				systray.Quit()
+				return
+			case <-mHelp.ClickedCh:
+				openbrowser("https://github.com/yuzhouu/mailcount")
+			}
 		}
+
 	}()
 
 	viper.SetConfigName("config")
